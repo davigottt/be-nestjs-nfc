@@ -46,6 +46,7 @@ export class DataService {
       throw new NotFoundException("Customer doesn't exist.");
     }
 
+    /** Merge existing and new values. The new values have priority. */
     return await this.customerRepository.save({
       ...customer,
       ...data,
@@ -53,6 +54,7 @@ export class DataService {
   }
 
   async getOne(id: number) {
+    /** Find customer by id. If it doesn't exist throw error. */
     const customer = await this.customerRepository.findOneBy({ id });
 
     if (!customer) {
