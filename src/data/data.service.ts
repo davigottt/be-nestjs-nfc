@@ -14,6 +14,9 @@ export class DataService {
     return await this.customerRepository.find();
   }
 
+  /**
+   * All properties are required.
+   */
   async create({
     name,
     phone,
@@ -30,6 +33,9 @@ export class DataService {
     return await this.customerRepository.delete({ id });
   }
 
+  /** This is intented so you only need to pass the properties which you want to change.
+   * The existing ones will stay the same.
+   */
   async update(
     id: number,
     data: Partial<{ name: string; phone: string; location: string }>,
