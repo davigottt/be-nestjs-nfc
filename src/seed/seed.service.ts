@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { Faker, cs_CZ } from '@faker-js/faker';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Customer } from 'src/data/data.entity';
+import { Customer } from '../data/data.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -24,7 +24,8 @@ export class SeedService {
     for (let i = 0; i < amount; i++) {
       const customer = {
         name: faker.company.name(),
-        phone: faker.phone.number('+420 ### ### ###'),
+        //phone: faker.phone.number('+420 ### ### ###'),
+        phone: `+420 ${faker.string.numeric(3)} ${faker.string.numeric(3)} ${faker.string.numeric(3)}`,
         location: `${faker.location.city()}, ${faker.location.streetAddress()}`,
       };
       customers.push(customer);
