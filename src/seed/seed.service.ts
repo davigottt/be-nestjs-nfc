@@ -11,7 +11,7 @@ export class SeedService {
     private readonly customerRepository: Repository<Customer>,
   ) {}
 
-  async seedData(amount: number) {
+  async seedData(amount: number): Promise<void> {
     const faker = new Faker({
       locale: [cs_CZ],
     });

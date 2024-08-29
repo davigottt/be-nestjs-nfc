@@ -5,7 +5,6 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { DataService } from './data/data.service';
@@ -13,6 +12,8 @@ import { Post } from '@nestjs/common';
 import { Body } from '@nestjs/common';
 import { PersonCreateDto } from './data-create.dto';
 import { PersonEditDto } from './data-edit.dto';
+import { Customer } from './data/data.entity';
+import { InsertResult } from 'typeorm';
 
 @Controller()
 export class AppController {
@@ -27,12 +28,12 @@ export class AppController {
   }
 
   @Get('customers')
-  getAllCustomer() {
+  getAllCustomer(): Promise<Customer[]> {
     return this.dataService.getAll();
   }
 
   @Post('customers')
-  create(@Body() data: PersonCreateDto) {
+  create(@Body() data: PersonCreateDto): Promise<InsertResult> {
     return this.dataService.create({
       name: data.name,
       phone: data.phone,
@@ -41,7 +42,7 @@ export class AppController {
   }
 
   @Delete('customers/:id')
-  async delete(@Param('id', ParseIntPipe) id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number): Promise<void> {
     await this.dataService.remove(id);
   }
 
@@ -49,12 +50,12 @@ export class AppController {
   async update(
     @Body() data: PersonEditDto,
     @Param('id', ParseIntPipe) id: number,
-  ) {
+  ): Promise<Customer> {
     return await this.dataService.update(id, data);
   }
 
   @Get('customers/:id')
-  async getOne(@Param('id', ParseIntPipe) id: number) {
+  async getOne(@Param('id', ParseIntPipe) id: number): Promise<Customer> {
     return await this.dataService.getOne(id);
   }
 }

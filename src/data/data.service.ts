@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { Customer } from './data.entity';
 
 @Injectable()
@@ -10,7 +10,7 @@ export class DataService {
     private readonly customerRepository: Repository<Customer>,
   ) {}
 
-  async getAll() {
+  async getAll(): Promise<Customer[]> {
     return await this.customerRepository.find();
   }
 
@@ -29,7 +29,7 @@ export class DataService {
     return await this.customerRepository.insert({ name, phone, location });
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<DeleteResult> {
     return await this.customerRepository.delete({ id });
   }
 
@@ -39,7 +39,7 @@ export class DataService {
   async update(
     id: number,
     data: Partial<{ name: string; phone: string; location: string }>,
-  ) {
+  ): Promise<Customer> {
     const customer = await this.customerRepository.findOneBy({ id });
 
     if (!customer) {
@@ -53,7 +53,7 @@ export class DataService {
     });
   }
 
-  async getOne(id: number) {
+  async getOne(id: number): Promise<Customer> {
     /** Find customer by id. If it doesn't exist throw error. */
     const customer = await this.customerRepository.findOneBy({ id });
 
