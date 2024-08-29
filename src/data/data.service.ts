@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DeleteResult, Repository } from 'typeorm';
+import { DeleteResult, InsertResult, Repository } from 'typeorm';
 import { Customer } from './data.entity';
 
 @Injectable()
@@ -25,7 +25,7 @@ export class DataService {
     name: string;
     phone: string;
     location: string;
-  }) {
+  }): Promise<InsertResult> {
     return await this.customerRepository.insert({ name, phone, location });
   }
 

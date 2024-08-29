@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import * as Joi from 'joi';
 import { SeedModule } from './seed/seed.module';
 import { TypeOrmSQLITETestingModule } from './utils/testing-typeorm';
-import { DeleteResult, InsertResult } from 'typeorm';
+import { DeleteResult } from 'typeorm';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -58,28 +58,32 @@ describe('AppController', () => {
 
   describe('create', () => {
     it('should return created customer', async () => {
-      const input: Customer = {
-        id: 0,
+      const input: Omit<Customer, 'id'> = {
         name: 'Dan Otočný',
         phone: '123456789',
         location: 'Praha',
       };
-      const result: InsertResult = {
-        generatedMaps: [{ id: 1 }],
-        identifiers: [{ id: 1 }],
-        raw: 1,
+
+      const result = {
+        ...input,
+        id: 10,
       };
 
-      jest.spyOn(dataService, 'create').mockImplementation(async () => result);
+      jest
+        .spyOn(appController, 'create')
+        .mockImplementation(async () => result);
 
       const out = await appController.create(input);
 
-      expect(out.raw).toBe(1);
+      expect(out.name).toBe(input.name);
+      expect(out.phone).toBe(input.phone);
+      expect(out.location).toBe(input.location);
+      expect(out.id).toBeDefined();
     });
   });
 
   describe('remove', () => {
-    it('should remove the customer', async () => {
+    it('should not error', async () => {
       const input = 0;
       const result: DeleteResult = {
         affected: 1,

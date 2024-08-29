@@ -13,7 +13,6 @@ import { Body } from '@nestjs/common';
 import { PersonCreateDto } from './data-create.dto';
 import { PersonEditDto } from './data-edit.dto';
 import { Customer } from './data/data.entity';
-import { InsertResult } from 'typeorm';
 
 @Controller()
 export class AppController {
@@ -33,12 +32,16 @@ export class AppController {
   }
 
   @Post('customers')
-  create(@Body() data: PersonCreateDto): Promise<InsertResult> {
-    return this.dataService.create({
+  async create(
+    @Body() data: PersonCreateDto,
+  ): Promise<PersonCreateDto & { id: number }> {
+    const out = await this.dataService.create({
       name: data.name,
       phone: data.phone,
       location: data.location,
     });
+
+    return { ...data, id: out.identifiers[0].id };
   }
 
   @Delete('customers/:id')
