@@ -46,13 +46,51 @@ describe('AppController', () => {
 
   describe('findAll', () => {
     it('should return an array of customers', async () => {
-      const result: Customer[] = [
-        { id: 0, name: 'x', phone: '', location: '' },
-      ];
+      const result = {
+        items: [
+          {
+            id: 2912,
+            name: 'Kouba a Bečka a.s.',
+            phone: '+420 961 351 958',
+            location: 'Skuteč, U Velké Skály 40',
+          },
+          {
+            id: 2913,
+            name: 'Svačina a Straka a.s.',
+            phone: '+420 914 548 161',
+            location: 'Kroměříž, K Moravině 268',
+          },
+          {
+            id: 2914,
+            name: 'Medková v.o.s.',
+            phone: '+420 766 226 236',
+            location: 'Rudná, V Kole 348',
+          },
+          {
+            id: 2915,
+            name: 'Horák a Chudoba v.o.s.',
+            phone: '+420 349 203 683',
+            location: 'Krásná Hora nad Vltavou, Vraňanská 7',
+          },
+          {
+            id: 2916,
+            name: 'Bubeník a Kazda a.s.',
+            phone: '+420 528 395 076',
+            location: 'Uherský Ostroh, K Zadní Kopanině 9',
+          },
+        ],
+        meta: {
+          totalItems: 100,
+          itemCount: 5,
+          itemsPerPage: 5,
+          totalPages: 20,
+          currentPage: 2,
+        },
+      };
 
       jest.spyOn(dataService, 'getAll').mockImplementation(async () => result);
 
-      expect(await appController.getAllCustomer()).toBe(result);
+      expect(await appController.getAllCustomer(2, 5)).toBe(result);
     });
   });
 

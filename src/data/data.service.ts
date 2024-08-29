@@ -2,6 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeleteResult, InsertResult, Repository } from 'typeorm';
 import { Customer } from './data.entity';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class DataService {
@@ -10,8 +15,9 @@ export class DataService {
     private readonly customerRepository: Repository<Customer>,
   ) {}
 
-  async getAll(): Promise<Customer[]> {
-    return await this.customerRepository.find();
+  getAll(options: IPaginationOptions): Promise<Pagination<Customer>> {
+    const queryBuilder = this.customerRepository.createQueryBuilder('c');
+    return paginate<Customer>(queryBuilder, options);
   }
 
   /**

@@ -1,10 +1,12 @@
 import {
   Controller,
+  DefaultValuePipe,
   Delete,
   Get,
   Param,
   ParseIntPipe,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { AppService } from './app.service';
 import { DataService } from './data/data.service';
@@ -13,6 +15,7 @@ import { Body } from '@nestjs/common';
 import { PersonCreateDto } from './data-create.dto';
 import { PersonEditDto } from './data-edit.dto';
 import { Customer } from './data/data.entity';
+import { Pagination } from 'nestjs-typeorm-paginate';
 
 @Controller()
 export class AppController {
@@ -27,8 +30,12 @@ export class AppController {
   }
 
   @Get('customers')
-  getAllCustomer(): Promise<Customer[]> {
-    return this.dataService.getAll();
+  async getAllCustomer(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+  ): Promise<Pagination<Customer>> {
+    limit = limit > 100 ? 100 : limit;
+    return await this.dataService.getAll({ page, limit });
   }
 
   @Post('customers')
