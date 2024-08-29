@@ -32,9 +32,10 @@ export class AppController {
   @Get('customers')
   async getAllCustomer(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number = 1,
-    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 10,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number = 100,
   ): Promise<Pagination<Customer>> {
-    limit = limit > 100 ? 100 : limit;
+    // Limit maximum page size
+    limit = limit > 200 ? 200 : limit;
     return await this.dataService.getAll({ page, limit });
   }
 
